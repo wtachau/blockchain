@@ -77,7 +77,7 @@ test("blockchain is invalid if balances go below zero") {
   !blockchain.is_valid?
 }
 
-t0 = Transaction.new(to: alice, amount: 50, genesis: true)
+t0 = Transaction.new(to: alice.public_key, amount: 50, genesis: true)
 
 test("genesis transactions need not be signed") {
   t0.is_valid?

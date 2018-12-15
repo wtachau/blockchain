@@ -10,6 +10,7 @@ require_relative "constants"
 require_relative "transaction"
 require_relative "block"
 require_relative "blockchain"
+require_relative "message"
 
 ###########
 # Helpers #
@@ -46,7 +47,15 @@ end
 nodes = []
 seed_port = ARGV[0]
 if seed_port && seed_port != "-p"
-  peers_response = HTTParty.get("http://localhost:#{seed_port}/peers")
+
+  peers_response = make_request(
+    url: "http://localhost:#{seed_port}/peers",
+    body: Message.new(
+      port: me.port
+    ).to_hash,
+    post: true
+  )
+
   nodes = JSON.parse(peers_response).map { |params|
     node = Node.from_params(params: params)
     node.is_peer = true
@@ -91,6 +100,29 @@ me.fork_choice(blockchain: blockchain)
 
 log "Node #{settings.port} coming online".green
 
+post "/peers" do
+  params = JSON.parse(request.body.read)
+  message = Message.from_params(params: params)
+  node = nodes.find { |node| node.port == message.port }
+
+  if node
+    if node.version < message.version
+      node.version = message.version
+      node.book = message.payload
+      node.last_heard_from = Time.now
+    end
+  else
+    new_node = Node.new(
+      port: message.port,
+      book: message.payload,
+      version: message.version,
+      is_peer: true
+    )
+  end
+
+  (get_peers(nodes: nodes) + [me]).map(&:to_hash).to_json
+end
+
 post "/transfer" do
   params = JSON.parse(request.body.read)
 
@@ -102,7 +134,16 @@ post "/transfer" do
   )
 
   transactions.push(transaction)
-  puts transactions
+  puts transactions.map(&:friendly_string)
+
+  message = Message.new(
+    port: me.port,
+    payload: Marshal.dump(transaction)
+  )
+  send_message_to_peers(
+    message: message,
+    peers: get_peers(nodes: nodes)
+  )
   true
 end
 

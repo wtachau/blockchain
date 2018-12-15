@@ -50,20 +50,7 @@ class Block
     " | " + "#{Utilities::fixed_length(@previous_hash, 21)}".cyan + " |\n" +
     " +-----------------------+\n" +
     " |      TRANSACTIONS     |\n" +
-    @transactions.map { |transaction|
-
-      from_string = Constants::GENESIS_KEYWORD
-      if transaction.from
-        from_string = Digest::SHA2.hexdigest(transaction.from.to_s)
-      end
-      to_string = Digest::SHA2.hexdigest(transaction.to_s)
-
-      " | FROM: #{Utilities::fixed_length(from_string, 15)} |\n" +
-      " | TO: #{Utilities::fixed_length(to_string, 17)} |\n" +
-      " | AMOUNT: #{Utilities::fixed_length(transaction.amount.to_s, 13)} |\n" +
-      " | SIGNATURE: #{Utilities::fixed_length(transaction.signature, 11)} |\n" +
-      " +-----------------------+\n"
-    }.join("\n") +
+    @transactions.map(&:friendly_string).join("\n") +
     " |        NONCE          |\n" +
     " | " + "#{Utilities::fixed_length(@nonce, 21)}".magenta + " |\n" +
     " +-----------------------+\n" +
