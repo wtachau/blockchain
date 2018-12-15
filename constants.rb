@@ -1,0 +1,10 @@
+module Constants
+
+  GENESIS_KEYWORD = "GENESIS"
+  WORK_FACTOR = 3
+  INITIAL_MONEY_PORT = 3000
+  INITIAL_MONEY_AMOUNT = 1000
+  GENESIS_BLOCK_NONCE_FILENAME = "genesis_block_nonce"
+
+end
+
