@@ -14,6 +14,15 @@ class Block
     @nonce = nonce
   end
 
+  def self.generate(transactions:, previous_block:)
+    block = self.new(
+      transactions: transactions,
+      previous_block: previous_block
+    )
+    block.find_matching_nonce
+    return block
+  end
+
   def set_previous_block(block:)
     @previous_hash = block.hash
   end

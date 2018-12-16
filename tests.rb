@@ -56,17 +56,15 @@ test("block is valid with valid transactions and valid nonce") {
   block1.is_valid?
 }
 
-block2 = Block.new(
+block2 = Block.generate(
   transactions: [t2],
   previous_block: block1
 )
-block2.find_matching_nonce
 
-block3 = Block.new(
+block3 = Block.generate(
   transactions: [t3],
   previous_block: block2
 )
-block3.find_matching_nonce
 
 blockchain = Blockchain.new(blocks: [block1, block2, block3])
 
@@ -83,11 +81,10 @@ test("genesis transactions need not be signed") {
   t0.is_valid?
 }
 
-block0 = Block.new(
+block0 = Block.generate(
   transactions: [t0],
   previous_block: nil
 )
-block0.find_matching_nonce
 
 test("new gensis block with genesis transactions valid") {
   block0.is_valid?

@@ -12,12 +12,20 @@ class Node
     @port = port
     @is_peer = is_peer
 
-    if File.file?(key_filename)
+    # This is necessary because, in order for us to serialize and persist
+    #  a genesis block between server invocations, the node that signs that
+    #  block needs to have the same keypair (otherwise the block will not
+    #  have a valid signature in subsequent invocations.
+    # Therefore, for only the node that is hardcoded in the genesis block to
+    #  receive money, persist its keypair to disk.
+    if File.file?(key_filename) && port == Constants::INITIAL_MONEY_PORT
       @key = OpenSSL::PKey::RSA.new(File.read(key_filename))
     else
       @key = OpenSSL::PKey::RSA.new(2048)
-      File.open(key_filename, "w+") do |f|
-        f.write @key.to_pem
+      if port == Constants::INITIAL_MONEY_PORT
+        File.open(key_filename, "w+") do |f|
+          f.write @key.to_pem
+        end
       end
     end
 

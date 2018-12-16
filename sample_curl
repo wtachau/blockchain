@@ -3,12 +3,12 @@ curl -d '{"to": "3001", "amount": 5}' -H "Content-Type: application/json" -X POS
 curl -H "Content-Type: application/json" -X POST http://localhost:3000/create_block
 
 ----------------
-curl -d '{"to": "3001", "amount": 5}' -H "Content-Type: application/json" -X POST http://localhost:3000/transfer
-
-curl -H "Content-Type: application/json" -X POST http://localhost:3002/create_block
-
-curl -d '{"to": "3002", "amount": 2}' -H "Content-Type: application/json" -X POST http://localhost:3000/transfer
-
-curl -d '{"to": "3001", "amount": 5}' -H "Content-Type: application/json" -X POST http://localhost:3000/transfer
-
+curl -d '{"to": "3001", "amount": 5}' -H "Content-Type: application/json" -X POST http://localhost:3000/transfer \
+&& \
+curl -H "Content-Type: application/json" -X POST http://localhost:3002/create_block \
+& \&
+curl -d '{"to": "3002", "amount": 2}' -H "Content-Type: application/json" -X POST http://localhost:3000/transfer \
+&& \
+curl -d '{"to": "3001", "amount": 5}' -H "Content-Type: application/json" -X POST http://localhost:3000/transfer \
+&& \
 curl -H "Content-Type: application/json" -X POST http://localhost:3002/create_block

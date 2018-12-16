@@ -26,21 +26,31 @@ class Transaction
   end
 
   def to_hash
+    signature = ""
+    if @signature
+      signature = @signature.bytes.to_a
+    end
+
     {
       from: @from,
       to: @to,
       amount: @amount,
-      signature: @signature.bytes.to_a,
+      signature: signature,
       genesis: @genesis
     }.with_indifferent_access
   end
 
   def self.from_params(params:)
+    signature = nil
+    if !params["signature"].empty?
+      signature = params["signature"].pack('c*').force_encoding("UTF-8")
+    end
+
     self.new(
       from: params["from"],
       to: params["to"],
       amount: params["amount"],
-      signature: params["signature"].pack('c*').force_encoding("UTF-8"),
+      signature: signature,
       genesis: params["genesis"]
     )
   end

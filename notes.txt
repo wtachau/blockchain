@@ -29,6 +29,11 @@ NEXT:
 
 -----------
 
+- refactor
+- ui
+  - have servers post data to separate server, have that establish socket
+  -
+
 - get gossip protocol working
 - broadcast transactions when you see them
 - adjust iframe to send that endpoint
