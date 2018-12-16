@@ -10,12 +10,12 @@ class Block
     if previous_block && !previous_block.is_valid?
       raise "Cannot instantiate block with invalid previous block"
     end
-    @previous_hash = previous_block ? previous_block.to_hash : Constants::GENESIS_KEYWORD
+    @previous_hash = previous_block ? previous_block.hash : Constants::GENESIS_KEYWORD
     @nonce = nonce
   end
 
   def set_previous_block(block:)
-    @previous_hash = block.to_hash
+    @previous_hash = block.hash
   end
 
   def content_to_validate
@@ -23,7 +23,7 @@ class Block
     "#{transactions_content}||#{@previous_hash}"
   end
 
-  def to_hash
+  def hash
     Digest::SHA2.hexdigest("#{content_to_validate}||#{@nonce}")
   end
 
@@ -43,19 +43,40 @@ class Block
     )
   end
 
+  def to_hash
+    {
+      transactions: @transactions.map(&:to_hash),
+      previous_hash: @previous_hash,
+      nonce: @nonce
+    }.with_indifferent_access
+  end
+
+  def self.from_params(params:)
+    block = self.new(
+      transactions: params["transactions"].map { |transaction_params|
+        Transaction.from_params(params: transaction_params)
+      },
+      nonce: params["nonce"]
+    )
+    block.previous_hash = params["previous_hash"]
+    block
+  end
+
   def to_s
-    "           BLOCK\n".light_blue +
-    " +-----------------------+\n" +
-    " | PREVIOUS HASH POINTER |\n" +
-    " | " + "#{Utilities::fixed_length(@previous_hash, 21)}".cyan + " |\n" +
-    " +-----------------------+\n" +
-    " |      TRANSACTIONS     |\n" +
-    @transactions.map(&:friendly_string).join("\n") +
-    " |        NONCE          |\n" +
-    " | " + "#{Utilities::fixed_length(@nonce, 21)}".magenta + " |\n" +
-    " +-----------------------+\n" +
-    " |         HASH          |\n" +
-    " | " + "#{Utilities::fixed_length(self.to_hash, 21)}".red + " |\n" +
-    " +-----------------------+"
+    (
+      "           BLOCK\n".light_blue +
+      " +-----------------------+\n" +
+      " | PREVIOUS HASH POINTER |\n" +
+      " | " + "#{Utilities::fixed_length(@previous_hash, 21)}".cyan + " |\n" +
+      " +-----------------------+\n" +
+      " |      TRANSACTIONS     |\n" +
+      @transactions.map(&:friendly_string).join("\n") +
+      " |        NONCE          |\n" +
+      " | " + "#{Utilities::fixed_length(@nonce, 21)}".magenta + " |\n" +
+      " +-----------------------+\n" +
+      " |         HASH          |\n" +
+      " | " + "#{Utilities::fixed_length(self.hash, 21)}".red + " |\n" +
+      " +-----------------------+"
+    ).force_encoding("UTF-8")
   end
 end

@@ -1,3 +1,5 @@
+require "faraday"
+
 module Utilities
 
   def self.is_prefixed_with_number(string, prefix, number)
@@ -15,15 +17,26 @@ module Utilities
     (string.length > length) ? string.slice(0..length - 4) + "..." : string.ljust(length, " ")
   end
 
-  def self.make_request(url:, body: nil, post: false)
+  def self.make_request(port:, path:, body: nil, post: false)
+    url = "http://localhost:#{port}/#{path}"
+
     begin
       if post
-        HTTParty.post(url, body: body.to_json, headers: { 'Content-Type' => 'application/json' })
+        response = Faraday.new(url: url).post do |f|
+          f.headers['Content-Type'] = 'application/json'
+          f.body = body.to_json.force_encoding(Encoding::UTF_8)
+        end
+
+        return response.body
       else
-        HTTParty.get(url)
+        Faraday.get(url).body
       end
     rescue Errno::ECONNREFUSED => e
       puts e
     end
+  end
+
+  def self.log(string)
+    puts "[#{Time.now}] " + string.to_s
   end
 end

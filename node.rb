@@ -1,14 +1,16 @@
 require 'openssl'
 require 'digest'
+require "time"
 
 require_relative "transaction"
 
 class Node
 
-  attr_accessor :public_key, :sign, :port, :blockchain
+  attr_accessor :public_key, :sign, :port, :blockchain, :is_peer, :last_heard_from
 
-  def initialize(port:)
+  def initialize(port:, is_peer: false)
     @port = port
+    @is_peer = is_peer
 
     if File.file?(key_filename)
       @key = OpenSSL::PKey::RSA.new(File.read(key_filename))
@@ -20,6 +22,7 @@ class Node
     end
 
     @blockchain = nil
+    @last_heard_from = Time.now
   end
 
   def key_filename
@@ -52,11 +55,6 @@ class Node
     transaction.signature = @key.sign(OpenSSL::Digest::SHA256.new, transaction.content_to_sign)
   end
 
-  # def verify(signature:, transaction:)
-  #   return false if signature.nil?
-  #   @key.public_key.verify(OpenSSL::Digest::SHA256.new, signature, transaction.content_to_sign)
-  # end
-
   def fork_choice(blockchain:)
     return if !blockchain.is_valid?
 
@@ -64,4 +62,19 @@ class Node
       @blockchain = blockchain
     end
   end
+
+  def display_hash
+    {
+      port: @port,
+      is_peer: @is_peer,
+      last_heard_from: @last_heard_from
+    }
+  end
+
+  def self.from_params(params:)
+    return self.new(
+      port: params["port"],
+    )
+  end
+
 end

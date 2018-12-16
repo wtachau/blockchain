@@ -1,3 +1,4 @@
+require 'active_support/core_ext/hash/indifferent_access'
 require "colorize"
 require "securerandom"
 require "digest"
@@ -30,9 +31,13 @@ class Blockchain
   end
 
   def add(block:)
+    if !block.is_valid?
+      Utilities::log block
+      raise ("cannot add invalid block")
+    end
+
     @blocks.push(block)
   end
-
 
   def balances_sufficient
     balances = {}
@@ -65,12 +70,26 @@ class Blockchain
       matches = true
       # don't check if this is the first block
       if previous_block
-        matches = b.previous_hash == previous_block.to_hash
+        matches = b.previous_hash == previous_block.hash
       end
       previous_block = b
       matches
     }
 
     return blocks_valid && blocks_sequential && balances_sufficient
+  end
+
+  def to_hash
+    return {
+      blocks: @blocks.map(&:to_hash)
+    }.with_indifferent_access
+  end
+
+  def self.from_params(params:)
+    return self.new(
+      blocks: params["blocks"].map { |block_params|
+        Block.from_params(params: block_params)
+      }
+    )
   end
 end
