@@ -87,9 +87,10 @@ post "/gossip" do
   params = JSON.parse(request.body.read)
   message = Message.from_params(params: params)
 
-  halt 200 if MessageService.have_already_received(
+  halt 200 if MessageService.should_not_process(
     message: message,
-    recent_messages: recent_messages
+    recent_messages: recent_messages,
+    me: me
   )
 
   NodeService.update_nodes_from_message(
@@ -100,7 +101,8 @@ post "/gossip" do
   MessageService.handle_message(
     message: message,
     transactions: transactions,
-    me: me
+    me: me,
+    nodes: nodes
   )
 
   UpdateStateService::share_state(

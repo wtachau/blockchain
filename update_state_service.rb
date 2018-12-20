@@ -10,6 +10,7 @@ module UpdateStateService
       body: {
         from: from.port,
         state: {
+          port: from.port,
           transactions: transactions.map(&:to_hash),
           blockchain: blockchain.to_hash
         }

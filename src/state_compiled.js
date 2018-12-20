@@ -4,6 +4,8 @@ var _react = _interopRequireDefault(require("react"));
 
 var _reactDom = _interopRequireDefault(require("react-dom"));
 
+var _jsSha = _interopRequireDefault(require("js-sha256"));
+
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 function _typeof(obj) { if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
@@ -49,17 +51,67 @@ function (_React$Component) {
       };
     });
 
+    _defineProperty(_assertThisInitialized(_assertThisInitialized(_this)), "blockDisplay", function (block) {
+      return _react.default.createElement("div", {
+        className: "block"
+      }, _react.default.createElement("div", {
+        className: "previous_hash"
+      }, "previous_root: ", block.previous_hash), _react.default.createElement("div", {
+        className: "merkle_root"
+      }, " merkle root: TODO "), _react.default.createElement("div", {
+        className: "nonce"
+      }, " nonce: ", block.nonce, " "), _react.default.createElement("div", {
+        className: "hash"
+      }, " hash: ", block.hash, " "));
+    });
+
+    _defineProperty(_assertThisInitialized(_assertThisInitialized(_this)), "transactionDisplay", function (transaction) {
+      return _react.default.createElement("div", {
+        className: "transaction"
+      }, _react.default.createElement("div", {
+        className: "from"
+      }, "from: ", (0, _jsSha.default)(transaction.from)), _react.default.createElement("div", {
+        className: "to"
+      }, "to: ", (0, _jsSha.default)(transaction.to)), _react.default.createElement("div", {
+        className: "amount"
+      }, "amount: $", transaction.amount), _react.default.createElement("div", {
+        className: "signature"
+      }, "signature: $", String.fromCharCode.apply(null, transaction.signature)));
+    });
+
     _defineProperty(_assertThisInitialized(_assertThisInitialized(_this)), "nodeDisplay", function (data) {
+      if (!data) {
+        return null;
+      }
+
       console.log(data);
-      return _react.default.createElement("div", null, _react.default.createElement("div", null, _react.default.createElement("div", null, "blockchain:"), _react.default.createElement("div", null, data.blockchain.blocks.length)), _react.default.createElement("div", null, _react.default.createElement("div", null, "mempool:"), _react.default.createElement("div", null, data.transactions.length)));
+      return _react.default.createElement("div", {
+        className: "node"
+      }, _react.default.createElement("div", {
+        className: "node-contents"
+      }, _react.default.createElement("div", null, " port: ", data.port, " "), _react.default.createElement("div", null, _react.default.createElement("div", null, "blockchain height: ", data.blockchain.blocks.length, " blocks")), _react.default.createElement("div", {
+        className: "blocks"
+      }, data.blockchain.blocks.map(function (block) {
+        return _this.blockDisplay(block);
+      })), _react.default.createElement("div", null, _react.default.createElement("div", null, "mempool size: ", data.transactions.length)), _react.default.createElement("div", {
+        className: "transactions"
+      }, data.transactions.map(function (transaction) {
+        return _this.transactionDisplay(transaction);
+      }))));
     });
 
     _defineProperty(_assertThisInitialized(_assertThisInitialized(_this)), "render", function () {
       var data = _this.state.data;
-      var toPrint = Object.keys(data).map(function (key) {
-        return _react.default.createElement("div", null, _react.default.createElement("div", null, key), _react.default.createElement("div", null, _this.nodeDisplay(data[key])));
-      });
-      return _react.default.createElement("div", null, toPrint);
+      var keys = Object.keys(data);
+      var nodeDisplays = [];
+
+      for (var i = 0; i < keys.length + 2; i += 3) {
+        nodeDisplays.push(_react.default.createElement("div", {
+          className: "node-row clearfix"
+        }, _this.nodeDisplay(data[keys[i]]), _this.nodeDisplay(data[keys[i + 1]]), _this.nodeDisplay(data[keys[i + 2]])));
+      }
+
+      return _react.default.createElement("div", null, nodeDisplays);
     });
 
     _this.state = {

@@ -1,0 +1,22 @@
+{
+    "folders":
+    [
+        {
+            "path": "./",
+            "file_exclude_patterns": [
+              "*-workspace",
+              ".DS_Store",
+              "package-lock.json",
+              "public/index.bundle.js",
+              "src/state_compiled.js",
+              "*.pem",
+              "genesis_block_nonce"
+            ],
+            "folder_exclude_patterns": [
+              "node_modules/"
+            ],
+        }
+    ]
+}
+
+

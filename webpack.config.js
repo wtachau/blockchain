@@ -4,6 +4,7 @@ module.exports = {
   entry: {
     index: [
       './src/state_compiled.js',
+      './src/src.scss',
     ]
   },
   resolve: {
@@ -18,6 +19,14 @@ module.exports = {
         use: 'babel-loader',
         test: /\.js$/,
         exclude: /node_modules/
+      },
+      {
+        test: /\.scss$/,
+        use: [
+          "style-loader", // creates style nodes from JS strings
+          "css-loader", // translates CSS into CommonJS
+          "sass-loader" // compiles Sass to CSS, using Node Sass by default
+        ]
       }
     ]
   },

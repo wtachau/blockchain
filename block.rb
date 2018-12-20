@@ -56,7 +56,8 @@ class Block
     {
       transactions: @transactions.map(&:to_hash),
       previous_hash: @previous_hash,
-      nonce: @nonce
+      nonce: @nonce,
+      hash: self.hash
     }.with_indifferent_access
   end
 

@@ -7,7 +7,7 @@ class Message
     @port = port
     @payload = payload
     @type = type
-    @ttl = 246
+    @ttl = 5
   end
 
   def to_hash
