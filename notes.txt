@@ -51,6 +51,5 @@ when you receive a block, how do you know which transactions in your mempool it 
 
 
 -------------
-make dope UI
 get mining working?
 get merkle working?
