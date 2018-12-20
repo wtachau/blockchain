@@ -23,10 +23,6 @@ NEXT:
 - check that whoever is paying has enough $ for a transaction to be valid
 - start networking?
 
-
-
-
-
 -----------
 
 - refactor
@@ -40,3 +36,21 @@ NEXT:
 - when a block is created, add it to your chain and broadcast blockchain
 - if you see a longer blockchain, make yours
 - adjust ui to show balances/ blockchain height
+
+
+questions from video:
+----------------------
+what is this "bitcoin per kilobyte" idea? ~28 min in
+when you receive a block, how do you know which transactions in your mempool it covers?
+
+
+
+
+
+
+
+
+-------------
+get socket working so server 2 shares STATE with front end
+get react(?) working so that display updates with socket changes
+make dope UI

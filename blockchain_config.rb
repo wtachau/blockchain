@@ -42,5 +42,4 @@ module BlockchainConfig
 
     return Blockchain.new(blocks: [genesis_block])
   end
-
 end
