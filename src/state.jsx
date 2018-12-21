@@ -86,7 +86,7 @@ class Blockchain extends React.Component {
 
           <div>
             <div className='blockchain-header'>
-              blockchain height: {data.blockchain.blocks.length} blocks
+              blockchain height: <b>{data.blockchain.blocks.length} blocks</b>
             </div>
           </div>
 
@@ -94,13 +94,13 @@ class Blockchain extends React.Component {
             {
               data.blockchain.blocks.map((block) => {
                 return this.blockDisplay(block);
-              })
+              }).reduce((prev, curr) => [prev, <div className='separator'> ^ </div>, curr])
             }
           </div>
 
           <div>
             <div className='transactions-header'>
-              mempool size: {data.transactions.length}
+              mempool size: <b>{data.transactions.length}</b>
             </div>
           </div>
 

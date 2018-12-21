@@ -41,9 +41,16 @@ html {
       text-transform: uppercase;
     }
 
+    .separator {
+      font-size: 40px;
+      text-align: center;
+      margin: -8px 0px -20px 0px;
+    }
+
     .blocks .block, .transactions .transaction, .balances {
       @include overflow;
-      border: 1px solid #d2d2d2;
+      border: 1px solid #a4e4ff;
+      background: #e7f8ff;
       border-radius: 8px;
       padding: 8px;
       margin-bottom: 8px;
