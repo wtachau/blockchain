@@ -122,16 +122,23 @@ class Blockchain extends React.Component {
     const keys = Object.keys(data)
 
     const nodeDisplays = []
-    for (var i = 0; i < keys.length + 2; i += 3) {
+    const numPerRow = 4;
+    for (var i = 0; i < keys.length + 3; i += numPerRow) {
       nodeDisplays.push(
         <div className='node-row clearfix'>
           { this.nodeDisplay(data[keys[i]])}
           { this.nodeDisplay(data[keys[i + 1]])}
           { this.nodeDisplay(data[keys[i + 2]])}
+          { this.nodeDisplay(data[keys[i + 3]])}
         </div>
       )
     }
-    return <div>{nodeDisplays}</div>
+    return (
+      <div>
+        <h1>WillCoin</h1>
+        {nodeDisplays}
+      </div>
+    )
   }
 }
 
