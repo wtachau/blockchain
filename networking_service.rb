@@ -1,3 +1,5 @@
+require "openssl"
+
 require_relative "utilities"
 require_relative "message"
 require_relative "node"
@@ -22,9 +24,11 @@ module NetworkingService
   end
 
   def self.fetch_public_key(from:)
-    Utilities::make_request(
-      port: from,
-      path: "public_key"
+    OpenSSL::PKey::RSA.new(
+      Utilities::make_request(
+        port: from,
+        path: "public_key"
+      )
     )
   end
 

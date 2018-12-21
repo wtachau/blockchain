@@ -4,6 +4,8 @@ require_relative "constants"
 module UpdateStateService
 
   def self.share_state(from:, transactions:, blockchain:)
+    _, balances = blockchain.balances_sufficient?
+
     Utilities::make_request(
       port: Constants::STATE_SERVICE_PORT,
       path: "/state",
@@ -12,7 +14,8 @@ module UpdateStateService
         state: {
           port: from.port,
           transactions: transactions.map(&:to_hash),
-          blockchain: blockchain.to_hash
+          blockchain: blockchain.to_hash,
+          balances: balances
         }
       },
       post: true

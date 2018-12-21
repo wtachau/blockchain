@@ -1,5 +1,7 @@
+
 require_relative "networking_service"
 require_relative "block"
+require_relative "utilities"
 
 module BlockService
 
@@ -9,6 +11,13 @@ module BlockService
       previous_block: node.blockchain.last_block
     )
 
+    if !block.is_valid?
+      Utilities::log "Not adding block or broadcasting because it is invalid".red
+      return false
+
+      # TODO: If it's invalid, try again with different transactions
+    end
+
     node.blockchain.add(block: block)
 
     NetworkingService::broadcast_blockchain(
@@ -16,5 +25,7 @@ module BlockService
       blockchain: node.blockchain,
       nodes: nodes
     )
+
+    return true
   end
 end

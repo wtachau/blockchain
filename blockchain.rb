@@ -39,34 +39,39 @@ class Blockchain
     @blocks.push(block)
   end
 
-  def balances_sufficient
+  def balances_sufficient?
     balances = {}
     @blocks.each do |block|
       block.transactions.each do |transaction|
+
         # First check that sender has enough
         if !transaction.is_genesis?
-          sender = transaction.from.to_s
+          sender = Digest::SHA2.hexdigest(transaction.from.to_s)
 
-          balances[sender] ||= 0
-
-          if balances[sender] < transaction.amount
-            # puts "#{sender} only has #{balances[sender]} but is sending #{transaction.amount}"
-            return false
+          if balances[sender].nil? || balances[sender] < transaction.amount
+            Utilities.log "#{sender} only has #{balances[sender]} but is sending #{transaction.amount}".red
+            return false, balances
           end
+
+          balances[sender] -= transaction.amount
         end
 
-        receiver = transaction.to.to_s
+        receiver = Digest::SHA2.hexdigest(transaction.to.to_s)
         balances[receiver] ||= 0
         balances[receiver] += transaction.amount
       end
     end
+
+    return true, balances
   end
 
-  def is_valid?
-    blocks_valid = @blocks.all? { |b| b.is_valid? }
+  def all_blocks_valid?
+    @blocks.all? { |b| b.is_valid? }
+  end
 
+  def blocks_sequential?
     previous_block = nil
-    blocks_sequential = @blocks.all? { |b|
+    return @blocks.all? { |b|
       matches = true
       # don't check if this is the first block
       if previous_block
@@ -75,8 +80,11 @@ class Blockchain
       previous_block = b
       matches
     }
+  end
 
-    return blocks_valid && blocks_sequential && balances_sufficient
+  def is_valid?
+    balances_sufficient, _ = balances_sufficient?
+    return all_blocks_valid? && blocks_sequential? && balances_sufficient
   end
 
   def to_hash

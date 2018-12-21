@@ -60,19 +60,21 @@ post "/transfer" do
 end
 
 get "/public_key" do
-  me.public_key.to_text
+  me.public_key
 end
 
 post "/create_block" do
   Utilities::log "Now Creating A Block!".cyan
 
-  block = BlockService.generate_block(
+  success = BlockService.generate_block(
     node: me,
     nodes: nodes,
     transactions: transactions
   )
 
-  transactions = []
+  if success
+    transactions.clear
+  end
 
   UpdateStateService::share_state(
     from: me,
@@ -86,6 +88,9 @@ end
 post "/gossip" do
   params = JSON.parse(request.body.read)
   message = Message.from_params(params: params)
+
+  # Simulate latency
+  sleep 0.2
 
   halt 200 if MessageService.should_not_process(
     message: message,

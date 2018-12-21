@@ -26,8 +26,6 @@ post "/state" do
   STATE[params["from"]] = params["state"]
 
   update_socket_data
-  puts STATE
-
 end
 
 get "/" do

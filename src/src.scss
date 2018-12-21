@@ -1,37 +1,67 @@
+$label-width: 110px;
+
 @mixin overflow {
   text-overflow: ellipsis;
   overflow: hidden;
   white-space: nowrap;
 }
 
+@mixin clearfix {
+  &:after {
+    content: "";
+    clear: both;
+    display: table;
+  }
+}
+
 html {
   background-color: #f9f9fb;
+  font-family: monospace;
 }
 
 .node {
   background: white;
   float: left;
-  width: 33%;
+  width: calc((100% - 32px) / 3 );
   overflow: auto;
+  border: 1px solid #d2d2d2;
+  border-radius: 8px;
+  margin: 4px;
   .node-contents {
     padding: 16px;
-  }
-
-  .blocks {
-    .block {
-      @include overflow;
-      border: 1px solid #d2d2d2;
-      border-radius: 8px;
-      padding: 8px;
+    .port {
+      text-align: center;
+      font-weight: bold;
+      margin: 8px;
     }
-  }
 
-  .transactions {
-    .transaction {
+    .blockchain-header, .transactions-header, .balances-header {
+      margin: 8px;
+      margin-top: 16px;
+      text-transform: uppercase;
+    }
+
+    .blocks .block, .transactions .transaction, .balances {
       @include overflow;
       border: 1px solid #d2d2d2;
       border-radius: 8px;
       padding: 8px;
+      margin-bottom: 8px;
+      .row {
+        @include clearfix;
+        .label {
+          @include overflow;
+          float: left;
+          width: $label-width;
+          font-weight: bold;
+        }
+        .value {
+          float: left;
+          width: calc(100% - #{$label-width});
+          text-overflow: ellipsis;
+          overflow: hidden;
+        }
+      }
     }
   }
 }

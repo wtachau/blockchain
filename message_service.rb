@@ -34,6 +34,8 @@ module MessageService
       Utilities::log "RECEIVED NEW BLOCKCHAIN".red
       blockchain = Blockchain.from_params(params: message.payload)
       me.fork_choice(blockchain: blockchain)
+
+      # TODO: Ask another node to see which transactions we should remove
       transactions.clear
     end
 

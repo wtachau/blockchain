@@ -1,2 +1,4 @@
 node_modules/*
 *.sublime-workspace
+public/index.bundle.js
+src/state_compiled.js

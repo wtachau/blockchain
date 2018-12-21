@@ -51,5 +51,14 @@ when you receive a block, how do you know which transactions in your mempool it 
 
 
 -------------
+blockchain isn;t valid!!
+
+1. either create =block with tranasctions or merkle root
+2. show balance in UI
+3. make UI dope!
+
 get mining working?
-get merkle working?
+hashing signatures doesn't work
+
+
+when we get a block, query to see which transactions we should remove

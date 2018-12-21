@@ -22,39 +22,72 @@ class Blockchain extends React.Component {
     }
   }
 
+  row = (label, value) => {
+    return (
+      <div className='row'>
+        <div className='label'>
+          {label}
+        </div>
+        <div className='value'>
+          {value}
+        </div>
+      </div>
+    )
+  }
+
   blockDisplay = (block) => {
+    const { previous_hash, merkle_root, nonce, hash } = block
     return (
       <div className='block'>
-        <div className='previous_hash'>previous_root: {block.previous_hash}</div>
-        <div className='merkle_root'> merkle root: TODO </div>
-        <div className='nonce'> nonce: {block.nonce} </div>
-        <div className='hash'> hash: {block.hash} </div>
+        { this.row('previous_hash', previous_hash) }
+        { this.row('merkle_root', merkle_root) }
+        { this.row('nonce', nonce) }
+        { this.row('hash', hash) }
       </div>
     )
   }
 
   transactionDisplay = (transaction) => {
+    const { from, to, amount, signature } = transaction
+
     return (
       <div className='transaction'>
-        <div className='from'>from: {sha256(transaction.from)}</div>
-        <div className='to'>to: {sha256(transaction.to)}</div>
-        <div className='amount'>amount: ${transaction.amount}</div>
-        <div className='signature'>signature: ${String.fromCharCode.apply(null, transaction.signature)}</div>
+        { this.row('from', sha256(from))}
+        { this.row('to', sha256(to))}
+        { this.row('amount', '$' + amount)}
+        { this.row('signature', String.fromCharCode.apply(null, signature))}
       </div>
     )
   }
 
   nodeDisplay = (data) => {
+    console.log(data)
     if (!data) {
       return null
     }
-    console.log(data)
     return (
       <div className="node">
         <div className="node-contents">
-          <div> port: {data.port} </div>
+          <div className='port'> PORT {data.port} </div>
+
           <div>
-            <div>blockchain height: {data.blockchain.blocks.length} blocks</div>
+            <div className='balances-header'>
+              balances:
+            </div>
+          </div>
+
+          <div className='balances'>
+            {
+              Object.keys(data.balances).map((balanceKey) => {
+                return this.row(balanceKey, (" => $") + data.balances[balanceKey])
+              })
+            }
+          </div>
+
+          <div>
+            <div className='blockchain-header'>
+              blockchain height: {data.blockchain.blocks.length} blocks
+            </div>
           </div>
 
           <div className='blocks'>
@@ -66,7 +99,9 @@ class Blockchain extends React.Component {
           </div>
 
           <div>
-            <div>mempool size: {data.transactions.length}</div>
+            <div className='transactions-header'>
+              mempool size: {data.transactions.length}
+            </div>
           </div>
 
           <div className='transactions'>

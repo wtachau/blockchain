@@ -80,4 +80,19 @@ module Utilities
   def self.log(string)
     puts "[#{Time.now}] " + string.to_s
   end
+
+
+  ##################
+  # Math Utilities #
+  ##################
+
+  def self.is_power_of_two(number:)
+    number.to_s(2).count("1") == 1
+  end
+
+  def self.next_highest_power_of_two(number:)
+    return 1 if number == 0
+    return 2 ** Math.log2(number).ceil
+  end
+
 end

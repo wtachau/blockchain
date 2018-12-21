@@ -1,8 +1,9 @@
-require 'openssl'
-require 'digest'
+require "openssl"
+require "digest"
 require "time"
 
 require_relative "transaction"
+require_relative "utilities"
 
 class Node
 
@@ -38,7 +39,7 @@ class Node
   end
 
   def public_key
-    @key.public_key
+    @key.public_key.to_pem
   end
 
   def address
@@ -64,7 +65,11 @@ class Node
   end
 
   def fork_choice(blockchain:)
-    return if !blockchain.is_valid?
+    valid = blockchain.is_valid?
+    if !valid
+      Utilities::log("Not choosing blockchain because it is invalid".red)
+      return
+    end
 
     if @blockchain.nil? || blockchain.height > @blockchain.height
       @blockchain = blockchain

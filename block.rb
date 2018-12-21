@@ -1,12 +1,14 @@
 require_relative "constants"
 require_relative "utilities"
 require_relative "proof_of_work"
+require_relative "merkle_tree"
 
 class Block
-  attr_accessor :transactions, :previous_hash, :nonce, :content_to_validate
+  attr_accessor :transactions, :previous_hash, :nonce, :block_header, :has_valid_nonce, :has_valid_transactions
 
   def initialize(transactions: nil, previous_block: nil, nonce: nil)
-    @transactions = transactions
+    @transactions = transactions.dup
+    @merkle_tree = MerkleTree.new(data: @transactions.map(&:to_s))
     if previous_block && !previous_block.is_valid?
       raise "Cannot instantiate block with invalid previous block"
     end
@@ -27,27 +29,30 @@ class Block
     @previous_hash = block.hash
   end
 
-  def content_to_validate
-    transactions_content = @transactions.map(&:to_s).join("||")
-    "#{transactions_content}||#{@previous_hash}"
+  def block_header
+    "#{@merkle_tree.root_node_hash}||#{@previous_hash}"
   end
 
   def hash
-    Digest::SHA2.hexdigest("#{content_to_validate}||#{@nonce}")
+    Digest::SHA2.hexdigest("#{block_header}||#{@nonce}")
   end
 
   def is_valid?
     return false if @nonce.nil?
+    return has_valid_nonce && has_valid_transactions
+  end
 
-    nonce_is_valid = ProofOfWork::verify_proof_of_work(content_to_validate, Constants::WORK_FACTOR, @nonce)
-    transactions_are_valid = @transactions.all? { |t| t.is_valid? }
+  def has_valid_nonce
+    return ProofOfWork::verify_proof_of_work(block_header, Constants::WORK_FACTOR, @nonce)
+  end
 
-    return nonce_is_valid && transactions_are_valid
+  def has_valid_transactions
+    return @transactions.all? { |t| t.is_valid? }
   end
 
   def find_matching_nonce
     @nonce = ProofOfWork::generate_proof_of_work(
-      challenge: self.content_to_validate,
+      challenge: self.block_header,
       work_factor: Constants::WORK_FACTOR
     )
   end
@@ -56,6 +61,7 @@ class Block
     {
       transactions: @transactions.map(&:to_hash),
       previous_hash: @previous_hash,
+      merkle_root: @merkle_tree.root_node_hash,
       nonce: @nonce,
       hash: self.hash
     }.with_indifferent_access
