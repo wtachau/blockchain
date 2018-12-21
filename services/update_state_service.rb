@@ -1,5 +1,5 @@
-require_relative "utilities"
-require_relative "constants"
+require_relative "../utilities"
+require_relative "../constants"
 
 module UpdateStateService
 

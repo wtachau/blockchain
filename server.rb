@@ -3,15 +3,18 @@ require "sinatra-websocket"
 require "colorize"
 
 require_relative "utilities"
-require_relative "node"
-require_relative "message"
-require_relative "networking_service"
-require_relative "blockchain_config"
-require_relative "block_service"
-require_relative "transfer_service"
-require_relative "message_service"
-require_relative "node_service"
-require_relative "update_state_service"
+
+require_relative "models/node"
+require_relative "models/message"
+
+require_relative "config/blockchain_config"
+
+require_relative "services/networking_service"
+require_relative "services/block_service"
+require_relative "services/transfer_service"
+require_relative "services/message_service"
+require_relative "services/node_service"
+require_relative "services/update_state_service"
 
 transactions = []
 recent_messages = Set.new

@@ -1,6 +1,6 @@
 require "securerandom"
 
-module ProofOfWork
+module ProofOfWorkService
 
   def self.generate_proof_of_work(challenge:, work_factor:)
     # Prevent stack overflow

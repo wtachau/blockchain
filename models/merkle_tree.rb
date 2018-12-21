@@ -1,6 +1,6 @@
 require 'digest'
 
-require_relative "utilities"
+require_relative "../utilities"
 
 class MerkleTree
 

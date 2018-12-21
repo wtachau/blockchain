@@ -1,7 +1,8 @@
-require_relative "constants"
-require_relative "transaction"
-require_relative "block"
-require_relative "blockchain"
+require_relative "../constants"
+
+require_relative "../models/transaction"
+require_relative "../models/block"
+require_relative "../models/blockchain"
 
 module BlockchainConfig
 

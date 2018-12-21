@@ -1,7 +1,8 @@
+require_relative "../utilities"
 
 require_relative "networking_service"
-require_relative "block"
-require_relative "utilities"
+
+require_relative "../models/block"
 
 module BlockService
 

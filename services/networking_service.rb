@@ -1,8 +1,9 @@
 require "openssl"
 
-require_relative "utilities"
-require_relative "message"
-require_relative "node"
+require_relative "../utilities"
+
+require_relative "../models/message"
+require_relative "../models/node"
 
 module NetworkingService
 

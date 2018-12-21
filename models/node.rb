@@ -2,8 +2,9 @@ require "openssl"
 require "digest"
 require "time"
 
+require_relative "../utilities"
+
 require_relative "transaction"
-require_relative "utilities"
 
 class Node
 

@@ -1,4 +1,4 @@
-require_relative "utilities"
+require_relative "../utilities"
 
 module NodeService
 

@@ -1,6 +1,7 @@
-require_relative "utilities"
-require_relative "transaction"
-require_relative "blockchain"
+require_relative "../utilities"
+
+require_relative "../models/transaction"
+require_relative "../models/blockchain"
 
 module MessageService
 

@@ -1,12 +1,12 @@
  require "colorize"
 
-require_relative "block"
-require_relative "blockchain"
 require_relative "constants"
-require_relative "node"
-require_relative "proof_of_work"
-require_relative "transaction"
 require_relative "utilities"
+
+require_relative "models/block"
+require_relative "models/blockchain"
+require_relative "models/node"
+require_relative "models/transaction"
 
 def test(description)
   is_true = yield()

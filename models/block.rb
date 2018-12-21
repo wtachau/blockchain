@@ -1,6 +1,8 @@
-require_relative "constants"
-require_relative "utilities"
-require_relative "proof_of_work"
+require_relative "../constants"
+require_relative "../utilities"
+
+require_relative "../services/proof_of_work_service"
+
 require_relative "merkle_tree"
 
 class Block
@@ -43,7 +45,7 @@ class Block
   end
 
   def has_valid_nonce
-    return ProofOfWork::verify_proof_of_work(block_header, Constants::WORK_FACTOR, @nonce)
+    return ProofOfWorkService::verify_proof_of_work(block_header, Constants::WORK_FACTOR, @nonce)
   end
 
   def has_valid_transactions
@@ -51,7 +53,7 @@ class Block
   end
 
   def find_matching_nonce
-    @nonce = ProofOfWork::generate_proof_of_work(
+    @nonce = ProofOfWorkService::generate_proof_of_work(
       challenge: self.block_header,
       work_factor: Constants::WORK_FACTOR
     )

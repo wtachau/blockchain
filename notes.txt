@@ -58,7 +58,4 @@ blockchain isn;t valid!!
 3. make UI dope!
 
 get mining working?
-hashing signatures doesn't work
-
-
 when we get a block, query to see which transactions we should remove
