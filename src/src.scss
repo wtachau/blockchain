@@ -47,10 +47,26 @@ html {
       margin: -8px 0px -20px 0px;
     }
 
-    .blocks .block, .transactions .transaction, .balances {
-      @include overflow;
+    .blocks .block {
       border: 1px solid #a4e4ff;
       background: #e7f8ff;
+      color: #00acf5;
+    }
+
+    .transactions .transaction {
+      color: #5e00f5;
+      background: #efe6ff;
+      border: 1px solid #bd98ff;
+    }
+
+    .balances {
+      background: #f6ffed;
+      border: 1px solid #b7eb8f;
+      color: #52c41a;
+    }
+
+    .blocks .block, .transactions .transaction, .balances {
+      @include overflow;
       border-radius: 8px;
       padding: 8px;
       margin-bottom: 8px;
