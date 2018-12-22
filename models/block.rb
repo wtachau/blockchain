@@ -8,12 +8,13 @@ require_relative "merkle_tree"
 class Block
   attr_accessor :transactions, :previous_hash, :nonce, :block_header, :has_valid_nonce, :has_valid_transactions
 
-  def initialize(transactions: nil, previous_block: nil, nonce: nil)
+  def initialize(transactions: nil, previous_block: nil, timestamp: nil, nonce: nil)
     @transactions = transactions.dup
     @merkle_tree = MerkleTree.new(data: @transactions.map(&:to_s))
     if previous_block && !previous_block.is_valid?
       raise "Cannot instantiate block with invalid previous block"
     end
+    @timestamp = timestamp || Time.now
     @previous_hash = previous_block ? previous_block.hash : Constants::GENESIS_KEYWORD
     @nonce = nonce
   end
@@ -64,6 +65,7 @@ class Block
       transactions: @transactions.map(&:to_hash),
       previous_hash: @previous_hash,
       merkle_root: @merkle_tree.root_node_hash,
+      timestamp: @timestamp,
       nonce: @nonce,
       hash: self.hash
     }.with_indifferent_access
@@ -74,6 +76,7 @@ class Block
       transactions: params["transactions"].map { |transaction_params|
         Transaction.from_params(params: transaction_params)
       },
+      timestamp: params["timestamp"],
       nonce: params["nonce"]
     )
     block.previous_hash = params["previous_hash"]

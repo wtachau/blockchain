@@ -36,11 +36,12 @@ class Blockchain extends React.Component {
   }
 
   blockDisplay = (block) => {
-    const { previous_hash, merkle_root, nonce, hash } = block
+    const { previous_hash, merkle_root, timestamp, nonce, hash } = block
     return (
       <div className='block'>
         { this.row('previous_hash', previous_hash) }
         { this.row('merkle_root', merkle_root) }
+        { this.row('timestamp', timestamp) }
         { this.row('nonce', nonce) }
         { this.row('hash', hash) }
       </div>

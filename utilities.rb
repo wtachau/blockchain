@@ -54,7 +54,7 @@ module Utilities
     end
   end
 
-  def self.make_request(port:, path:, body: nil, post: false)
+  def self.make_request(port:, path:, body: {}, post: false)
     url = "http://localhost:#{port}/#{path}"
 
     begin

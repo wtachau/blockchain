@@ -32,6 +32,12 @@ me.fork_choice(blockchain: blockchain)
 
 Utilities::log "Node #{settings.port} coming online".green
 
+UpdateStateService::share_state(
+  from: me,
+  transactions: transactions,
+  blockchain: me.blockchain
+)
+
 post "/peers" do
   params = JSON.parse(request.body.read)
   message = Message.from_params(params: params)
@@ -44,19 +50,12 @@ post "/transfer" do
   params = JSON.parse(request.body.read)
   Utilities::log "Now Transfering $#{params['amount']} to #{params['to']}!".cyan
 
-  new_transaction = TransferService::send_money(
+  TransferService::send_money(
     node: me,
     nodes: nodes,
     to_port: params["to"],
-    amount: params["amount"]
-  )
-
-  transactions.push(new_transaction)
-
-  UpdateStateService::share_state(
-    from: me,
-    transactions: transactions,
-    blockchain: me.blockchain
+    amount: params["amount"],
+    transactions: transactions
   )
 
   true
@@ -69,20 +68,10 @@ end
 post "/create_block" do
   Utilities::log "Now Creating A Block!".cyan
 
-  success = BlockService.generate_block(
+  BlockService.generate_block(
     node: me,
     nodes: nodes,
     transactions: transactions
-  )
-
-  if success
-    transactions.clear
-  end
-
-  UpdateStateService::share_state(
-    from: me,
-    transactions: transactions,
-    blockchain: me.blockchain
   )
 
   true

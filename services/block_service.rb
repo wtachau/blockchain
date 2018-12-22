@@ -1,6 +1,7 @@
 require_relative "../utilities"
 
 require_relative "networking_service"
+require_relative "update_state_service"
 
 require_relative "../models/block"
 
@@ -20,6 +21,13 @@ module BlockService
     end
 
     node.blockchain.add(block: block)
+    transactions.clear
+
+    UpdateStateService::share_state(
+      from: node,
+      transactions: transactions,
+      blockchain: node.blockchain
+    )
 
     NetworkingService::broadcast_blockchain(
       from: node.port,
