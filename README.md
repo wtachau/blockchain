@@ -52,5 +52,5 @@ ruby server.rb 3000 -p 3001
 The system is hardcoded to provide the node on port 3000 with $1000 WillCoin initially, and assumes the UI server is run on port 3010. Those values can be changed in `constants.rb`.
 
 
-  
-[TODO]
+### Credits
+This project was built in [Bradfield's](https://bradfieldcs.com/) course on Cryptocurrencies, with the help of [Haseeb Qureshi](https://haseebq.com/).
